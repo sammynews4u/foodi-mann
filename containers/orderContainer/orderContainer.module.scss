@@ -1,0 +1,20 @@
+.ordersSections{
+  position:relative;
+  .mapContainer{
+    
+  }
+  .info {
+    position:absolute;
+    top:0;
+    left:55%;
+    width: 40%;
+    margin: 20px 0;
+    @media (max-width: 576px) {
+      margin: 10px 0;
+      top:10%;
+      width:90%;
+      left:5%;
+    }
+  }
+}
+
