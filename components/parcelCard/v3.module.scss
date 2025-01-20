@@ -1,0 +1,114 @@
+.container {
+  padding: 60px 0;
+  background-color: var(--secondary-bg);
+  @media (width < 576px) {
+    padding: 24px 0;
+  }
+}
+.wrapper {
+  position: relative;
+  height: 530px;
+  img {
+    // border-radius: 24px;
+  }
+  @media (width < 576px) {
+    height: 372px;
+  }
+  .backdrop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    border-radius: 24px;
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.4) 100%
+    );
+  }
+  .brandLogo {
+    position: absolute;
+    bottom: 30px;
+    right: -10rem;
+    z-index: 2;
+    >img{
+      object-fit:contain;
+      width:50%;
+    }
+    @media (width < 1140px) {
+      bottom: auto;
+      top: 20px;
+      display:none;
+      right: 20px;
+    }
+  }
+  .body {
+    position: absolute;
+    left: 64px;
+    bottom: -200px;
+    padding: 45px;
+    z-index: 11;
+    color:white;
+    max-width: 530px;
+    border-radius: 24px;
+    background-color: var(--primary);
+    box-shadow: 0px 10px 30px 0px rgba(91, 91, 91, 0.2);
+    @media (width < 1140px) {
+      left: 20px;
+      padding: 26px 20px;
+    }
+    @media (width < 576px) {
+      left: .3rem;
+      bottom: -230px;
+      max-width: 380px;
+      padding: 26px 20px;
+    }
+    .title {
+      margin: 0;
+      // margin-bottom: 20px;
+      font-size: 50px;
+      font-weight: 700;
+      color:white;
+      line-height: 120%;
+      margin:1rem 0;
+      // color: var(--black);
+      @media (width < 576px) {
+        font-size: 38px;
+      }
+    }
+    .caption {
+      margin: 0;
+      font-size: 17px;
+      line-height: 120%;
+      color: white;
+      @media (width < 576px) {
+        font-size: 16px;
+      }
+    }
+  }
+  .actions {
+    max-width: 200px;
+    color:white;
+    margin-top: 20px;
+    @media (width < 576px) {
+      margin-top: 48px;
+    }
+    button{
+      border:1px solid white!important;
+      color:white;
+      padding:1rem;
+      width:80%;
+      font-size:1.1rem;
+      font-weight:500;
+    }
+  }
+}
+.space {
+  position: relative;
+  padding-top: 120px;
+  @media (width < 576px) {
+    padding-top: 190px;
+  }
+}
