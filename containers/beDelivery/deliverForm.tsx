@@ -22,7 +22,8 @@ const DeliverForm: React.FC = () => {
   const [cities, setCities] = useState<City[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [selectedState, setSelectedState] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true); // Start loading as true
+  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -30,94 +31,70 @@ const DeliverForm: React.FC = () => {
     const fetchCountries = async () => {
       try {
         const res = await fetch("/api/countries");
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
         const data: Country[] = await res.json();
         setCountries(data);
-      } catch (err: any) { // Type the error
-        console.error("Error fetching countries:", err);
-        setError("Failed to fetch countries. Please try again.");
+      } catch (err: any) {
+        setError("Failed to fetch countries.");
       } finally {
         setLoading(false);
       }
     };
-
     fetchCountries();
   }, []);
 
   useEffect(() => {
     const fetchStates = async () => {
-        if (!selectedCountry) return; // Exit early if no country selected
+      if (!selectedCountry) return;
+      setLoading(true);
       try {
-        setLoading(true); // Set loading before fetch
         const res = await fetch(`/api/states?country=${selectedCountry}`);
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
         const data: State[] = await res.json();
         setStates(data);
       } catch (err: any) {
-        console.error("Error fetching states:", err);
-        setError("Failed to fetch states. Please try again.");
+        setError("Failed to fetch states.");
       } finally {
         setLoading(false);
       }
     };
-
     fetchStates();
   }, [selectedCountry]);
 
   useEffect(() => {
-        const fetchCities = async () => {
-            if (!selectedState) return;
-          try {
-            setLoading(true);
-            const res = await fetch(`/api/cities?state=${selectedState}`);
-              if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-              }
-            const data: City[] = await res.json();
-            setCities(data);
-          } catch (err: any) {
-            console.error("Error fetching cities:", err);
-            setError("Failed to fetch cities. Please try again.");
-          } finally {
-            setLoading(false);
-          }
-        };
+    const fetchCities = async () => {
+      if (!selectedState) return;
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/cities?state=${selectedState}`);
+        const data: City[] = await res.json();
+        setCities(data);
+      } catch (err: any) {
+        setError("Failed to fetch cities.");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchCities();
   }, [selectedState]);
 
   const handleNextStep = () => {
-    if (!selectedCountry || !selectedState) {
-      alert("Please select both a country and a state to proceed.");
+    if (!selectedCountry || !selectedState || !selectedCity) {
+      alert("Please select a country, state, and city to proceed.");
       return;
     }
     router.push({
       pathname: "/deliverForm2",
-      query: { country: selectedCountry, state: selectedState },
+      query: { country: selectedCountry, state: selectedState, city: selectedCity },
     });
   };
 
-  if (loading) {
-    return <p>Loading...</p>; //Simplified loading view, handles initial load
-  }
-
-  if (error) {
-    return <p className="error-message">{error}</p>; //Simplified error view
-  }
-
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="error-message">{error}</p>;
 
   return (
     <section className="deliver-form">
       <h1>Create Your Profile</h1>
 
-      <select
-        className="form-control"
-        onChange={(e) => setSelectedCountry(e.target.value)}
-        value={selectedCountry}
-      >
+      <select onChange={(e) => setSelectedCountry(e.target.value)} value={selectedCountry}>
         <option value="">Select A Country</option>
         {countries.map((country) => (
           <option key={country.code} value={country.code}>
@@ -127,12 +104,7 @@ const DeliverForm: React.FC = () => {
       </select>
       <br />
 
-      <select
-        className="form-control"
-        onChange={(e) => setSelectedState(e.target.value)}
-        value={selectedState}
-        disabled={!selectedCountry} // Disable if no country is selected
-      >
+      <select onChange={(e) => setSelectedState(e.target.value)} value={selectedState} disabled={!selectedCountry}>
         <option value="">Select A State</option>
         {states.map((state) => (
           <option key={state.code} value={state.code}>
@@ -143,7 +115,7 @@ const DeliverForm: React.FC = () => {
       <br />
 
       {cities.length > 0 && (
-        <select className="form-control">
+        <select onChange={(e) => setSelectedCity(e.target.value)} value={selectedCity}>
           <option value="">Select A City</option>
           {cities.map((city) => (
             <option key={city.code} value={city.code}>
@@ -152,16 +124,9 @@ const DeliverForm: React.FC = () => {
           ))}
         </select>
       )}
-      {!cities.length && selectedState && (
-        <p>No cities available for the selected state.</p>
-      )}
       <br />
 
-      <button
-        className="sub-mit"
-        onClick={handleNextStep}
-        disabled={!selectedCountry || !selectedState}
-      >
+      <button onClick={handleNextStep} disabled={!selectedCountry || !selectedState || !selectedCity}>
         Next
       </button>
     </section>
